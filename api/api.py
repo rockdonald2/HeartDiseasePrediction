@@ -12,6 +12,7 @@ app = FastAPI()
 
 init = {}
 
+
 class ClassificationParameters(BaseModel):
     bmi: float = Field(description='Body Mass Index', ge=0.0)
     smoking: bool = Field(
@@ -52,8 +53,9 @@ class ClassificationParameters(BaseModel):
     @validator('age_category')
     def check_age_category(cls, v):
         if v not in init['age_category']:
-            raise ValidationError(f'Age category must be in {str(init["age_category"])}.')
-        
+            raise ValidationError(
+                f'Age category must be in {str(init["age_category"])}.')
+
         return v
 
     @validator('race')
@@ -66,8 +68,9 @@ class ClassificationParameters(BaseModel):
     @validator('general_health')
     def check_gen_health(cls, v):
         if v not in init['gen_health']:
-            raise ValidationError(f'General health must be in {str(init["gen_health"])}.')
-        
+            raise ValidationError(
+                f'General health must be in {str(init["gen_health"])}.')
+
         return v
 
 
@@ -99,7 +102,8 @@ def on_startup():
     X = heart_model_data.data
     y = heart_model_data.target
 
-    init['sgd'] = make_pipeline(StandardScaler(), SGDClassifier(loss='modified_huber', penalty='elasticnet', tol=1e-6, max_iter=np.ceil(10**8 / len(heart_model_data.data))))
+    init['sgd'] = make_pipeline(StandardScaler(), SGDClassifier(
+        loss='modified_huber', penalty='elasticnet', tol=1e-6, max_iter=np.ceil(10**8 / len(heart_model_data.data))))
     init['sgd'].fit(X, y)
 
 
@@ -111,11 +115,13 @@ def do_classify(input: ClassificationParameters):
 
     pass
 
+
 @app.get('/api/get/sex')
 def get_sex():
     return {
         'sex': init['sex']
     }
+
 
 @app.get('/api/get/age')
 def get_age():
@@ -123,11 +129,13 @@ def get_age():
         'age_category': init['age_category']
     }
 
+
 @app.get('/api/get/race')
 def get_race():
     return {
         'race': init['race']
     }
+
 
 @app.get('/api/get/gen_health')
 def get_gen_health():

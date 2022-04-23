@@ -7,9 +7,23 @@ from sklearn.utils import Bunch
 import pandas as pd
 import numpy as np
 from typing import Optional
+from fastapi.middleware.cors import CORSMiddleware
+from sklearn.model_selection import train_test_split
+
+origins = [
+    "http://localhost:8080"
+]
 
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"]
+)
 
 init = {}
 
@@ -19,7 +33,7 @@ class ClassificationParameters(BaseModel):
     smoking: bool = Field(
         description='Have you smoked at least 100 cigarettes in your entire life? [Note: 5 packs = 100 cigarettes]')
     alcohol_drinking: bool = Field(
-        description='Heavy drinkers (adult men having more than 14 drinks per week and adult women having more than 7 drinks per week')
+        description='Heavy drinkers (adult men having more than 14 drinks per week and adult women having more than 7 drinks per week)')
     stroke: bool = Field(description='(Ever told) (you had) a stroke?')
     physical_health: int = Field(
         description='Now thinking about your physical health, which includes physical illness and injury, for how many days during the past 30 days was your physical health not good? (0-30 days)',  ge=0, le=30)
@@ -136,9 +150,10 @@ def on_startup():
     X = heart_model_data.data
     y = heart_model_data.target
 
-    init['sgd'] = make_pipeline(StandardScaler(), SGDClassifier(
-        loss='modified_huber', penalty='elasticnet', tol=1e-6, max_iter=np.ceil(10**8 / len(heart_model_data.data))))
-    init['sgd'].fit(X, y)
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.1, random_state=2000)
+
+    init['sgd'] = make_pipeline(StandardScaler(), SGDClassifier(loss='modified_huber', penalty='elasticnet', tol=1e-8, max_iter=np.ceil(10**8 / len(heart_model_data.data)), class_weight='balanced'))
+    init['sgd'].fit(X_train, y_train)
 
 
 @app.post('/api/classify', response_model=ClassificationResult)

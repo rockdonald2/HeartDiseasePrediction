@@ -1,0 +1,166 @@
+.main {
+  margin-top: 5rem;
+
+  &--title {
+    font-size: 3rem;
+
+    & + p {
+      font-size: 2rem;
+      margin-top: 1rem;
+      font-weight: 300;
+      margin-bottom: 3rem;
+    }
+  }
+
+  &--form {
+    max-width: 65%;
+
+    &__error {
+      color: $color-red;
+      font-size: 1.4rem;
+      display: flex;
+      align-items: center;
+      max-height: 0;
+      opacity: 0;
+      transition: all .25s;
+
+      &.show {
+        margin-top: 0.5rem;
+        opacity: 1;
+        max-height: 100rem;
+      }
+
+      &--icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 1rem;
+
+        & > svg {
+          width: 2.5rem;
+          height: 2.5rem;
+        }
+      }
+    }
+
+    &__submit {
+        padding: 1rem 3rem;
+        font-size: 2rem;
+        background-color: transparent;
+        border: 2px solid $color-grey;
+        color: $font-color;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: all .25s;
+        width: 75%;
+        font-weight: 500;
+        letter-spacing: .11em;
+
+        &:hover,
+        &:active {
+            background-color: rgba($color-emphasis, 0.75);
+            border-color: transparent;
+        }
+    }
+  }
+
+  &--input {
+    display: flex;
+    align-items: flex-start;
+    flex-direction: column;
+    margin-bottom: 3rem;
+
+    &__comment {
+        font-size: 1.4rem;
+        color: rgba($font-color, .75);
+        font-style: italic;
+        font-weight: 300;
+    }
+
+    & > label {
+      font-size: 2.4rem;
+      font-weight: 300;
+    }
+
+    & > div {
+      margin-top: 1rem;
+      display: flex;
+      align-items: center;
+      font-size: 2rem;
+      width: 100%;
+
+      & > input,
+      & > select {
+        padding: 1rem 2rem;
+        background-color: transparent;
+        border: 2px solid rgba($color-grey, 0.35);
+        border-radius: 4px;
+        transition: all 0.25s;
+        width: 75%;
+        font-size: inherit;
+
+        &:hover {
+          border-color: rgba($color-grey, 0.6);
+        }
+
+        &:focus,
+        &:active {
+          border-color: rgba($color-emphasis, 0.6);
+        }
+      }
+
+      & > small {
+        margin-left: 1rem;
+        color: rgba($color-grey, 0.6);
+        width: 25%;
+        font-size: inherit;
+      }
+    }
+  }
+}
+
+.results {
+    max-height: 0;
+    transition: all .25s;
+    opacity: 0;
+
+    &.show {
+        margin-top: 5rem;
+        opacity: 1;
+        max-height: 1000px;
+    }
+
+    &--msg {
+        font-size: 2.8rem;
+        font-weight: 300;
+    }
+
+    &--percentage {
+        font-size: 6.4rem;
+        color: $color-emphasis;
+        font-weight: 600;
+    }
+
+    &--additionalmsg {
+        margin-top: 2rem;
+        font-size: 3.6rem;
+        color: $color-red;
+        display: flex;
+        align-items: center;
+        max-height: 1000px;
+        opacity: 1;
+        transition: all .25s;
+
+        svg {
+            height: 4rem;
+            width: 4rem;
+            margin-right: 1.5rem;
+        }
+
+        &.hidden {
+            opacity: 0;
+            margin-top: 0;
+            max-height: 0;
+        }
+    }
+}

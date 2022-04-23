@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, ValidationError, validator
 from sklearn.linear_model import SGDClassifier
 from sklearn.preprocessing import StandardScaler
 from sklearn.pipeline import make_pipeline
@@ -13,7 +13,7 @@ app = FastAPI()
 init = {}
 
 class ClassificationParameters(BaseModel):
-    bmi: float = Field(description='Body Mass Index')
+    bmi: float = Field(description='Body Mass Index', ge=0.0)
     smoking: bool = Field(
         description='Have you smoked at least 100 cigarettes in your entire life? [Note: 5 packs = 100 cigarettes]')
     alcohol_drinking: bool = Field(
@@ -40,12 +40,43 @@ class ClassificationParameters(BaseModel):
         description='Not including kidney stones, bladder infection or incontinence, were you ever told you had kidney disease?')
     skin_cancer: bool = Field(description='(Ever told) (you had) skin cancer?')
 
+    @validator('sex')
+    def check_sex(cls, v):
+        tmp = v[0].upper() + v[1:].lower()
+
+        if tmp not in init['sex']:
+            raise ValidationError(f'Sex must be in {str(init["sex"])}.')
+
+        return tmp
+
+    @validator('age_category')
+    def check_age_category(cls, v):
+        if v not in init['age_category']:
+            raise ValidationError(f'Age category must be in {str(init["age_category"])}.')
+        
+        return v
+
+    @validator('race')
+    def check_race(cls, v):
+        if v not in init['race']:
+            raise ValidationError(f'Race must be in {str(init["race"])}.')
+
+        return v
+
+    @validator('general_health')
+    def check_gen_health(cls, v):
+        if v not in init['gen_health']:
+            raise ValidationError(f'General health must be in {str(init["gen_health"])}.')
+        
+        return v
+
 
 @app.on_event('startup')
 def on_startup():
     '''
         Create classification model.
     '''
+
     heart = pd.read_csv('../data/heart_cleaned.csv')
 
     heart_model_data = Bunch()
@@ -57,6 +88,14 @@ def on_startup():
 
     del heart
 
+    heart_uncleaned = pd.read_csv('../data/heart_2020_cleaned.csv')
+    init['sex'] = heart_uncleaned['Sex'].unique().tolist()
+    init['age_category'] = heart_uncleaned['AgeCategory'].unique().tolist()
+    init['race'] = heart_uncleaned['Race'].unique().tolist()
+    init['gen_health'] = heart_uncleaned['GenHealth'].unique().tolist()
+
+    del heart_uncleaned
+
     X = heart_model_data.data
     y = heart_model_data.target
 
@@ -65,5 +104,33 @@ def on_startup():
 
 
 @app.post('/api/classify')
-def do_classify():
+def do_classify(input: ClassificationParameters):
+    '''
+        We will need to convert the input parameters to be fitting to our model.
+    '''
+
     pass
+
+@app.get('/api/get/sex')
+def get_sex():
+    return {
+        'sex': init['sex']
+    }
+
+@app.get('/api/get/age')
+def get_age():
+    return {
+        'age_category': init['age_category']
+    }
+
+@app.get('/api/get/race')
+def get_race():
+    return {
+        'race': init['race']
+    }
+
+@app.get('/api/get/gen_health')
+def get_gen_health():
+    return {
+        'gen_health': init['gen_health']
+    }

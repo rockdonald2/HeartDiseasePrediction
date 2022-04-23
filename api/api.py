@@ -1,11 +1,12 @@
 from fastapi import FastAPI
-from pydantic import BaseModel, Field, ValidationError, validator
+from pydantic import BaseModel, Field, validator
 from sklearn.linear_model import SGDClassifier
 from sklearn.preprocessing import StandardScaler
 from sklearn.pipeline import make_pipeline
 from sklearn.utils import Bunch
 import pandas as pd
 import numpy as np
+from typing import Optional
 
 
 app = FastAPI()
@@ -46,14 +47,14 @@ class ClassificationParameters(BaseModel):
         tmp = v[0].upper() + v[1:].lower()
 
         if tmp not in init['sex']:
-            raise ValidationError(f'Sex must be in {str(init["sex"])}.')
+            raise ValueError(f'Sex must be in {str(init["sex"])}.')
 
         return tmp
 
     @validator('age_category')
     def check_age_category(cls, v):
         if v not in init['age_category']:
-            raise ValidationError(
+            raise ValueError(
                 f'Age category must be in {str(init["age_category"])}.')
 
         return v
@@ -61,17 +62,49 @@ class ClassificationParameters(BaseModel):
     @validator('race')
     def check_race(cls, v):
         if v not in init['race']:
-            raise ValidationError(f'Race must be in {str(init["race"])}.')
+            raise ValueError(f'Race must be in {str(init["race"])}.')
 
         return v
 
     @validator('general_health')
     def check_gen_health(cls, v):
         if v not in init['gen_health']:
-            raise ValidationError(
+            raise ValueError(
                 f'General health must be in {str(init["gen_health"])}.')
 
         return v
+
+
+class ClassificationBarebone(BaseModel):
+    '''
+        Used internally only.
+    '''
+
+    bmi: Optional[float]
+    smoking: Optional[bool]
+    alcohol_drinking: Optional[bool]
+    stroke: Optional[bool]
+    physical_health: Optional[int] = Field(ge=0, le=30)
+    mental_health: Optional[int] = Field(ge=0, le=30)
+    diff_walking: Optional[bool]
+    sex: Optional[int] = Field(ge=0, le=1)
+    age_category: Optional[int]
+    race: Optional[int]
+    diabetic: Optional[bool]
+    physical_activity: Optional[bool]
+    general_health: Optional[int]
+    sleep_time: Optional[float]
+    asthma: Optional[bool]
+    kidney_disease: Optional[bool]
+    skin_cancer: Optional[bool]
+
+    def to_list(self) -> list:
+        return [self.bmi, self.smoking, self.alcohol_drinking, self.stroke, self.physical_health, self.mental_health, self.diff_walking, self.sex, self.age_category, self.race, self.diabetic, self.physical_activity, self.general_health, self.sleep_time, self.asthma, self.kidney_disease, self.skin_cancer]
+
+
+class ClassificationResult(BaseModel):
+    no: float = Field(description="Probability that heart disease won't occur")
+    yes: float = Field(description="Probability that heart disease will occur")
 
 
 @app.on_event('startup')
@@ -94,6 +127,7 @@ def on_startup():
     heart_uncleaned = pd.read_csv('../data/heart_2020_cleaned.csv')
     init['sex'] = heart_uncleaned['Sex'].unique().tolist()
     init['age_category'] = heart_uncleaned['AgeCategory'].unique().tolist()
+    init['age_category'].sort()
     init['race'] = heart_uncleaned['Race'].unique().tolist()
     init['gen_health'] = heart_uncleaned['GenHealth'].unique().tolist()
 
@@ -107,13 +141,35 @@ def on_startup():
     init['sgd'].fit(X, y)
 
 
-@app.post('/api/classify')
+@app.post('/api/classify', response_model=ClassificationResult)
 def do_classify(input: ClassificationParameters):
     '''
         We will need to convert the input parameters to be fitting to our model.
     '''
 
-    pass
+    data = ClassificationBarebone()
+
+    data.bmi = input.bmi
+    data.smoking = input.smoking
+    data.alcohol_drinking = input.alcohol_drinking
+    data.stroke = input.stroke
+    data.physical_health = input.physical_health
+    data.mental_health = input.mental_health
+    data.diff_walking = input.diff_walking
+    data.sex = init['sex'].index(input.sex)
+    data.age_category = init['age_category'].index(input.age_category)
+    data.race = init['race'].index(input.race)
+    data.diabetic = input.diabetic
+    data.physical_activity = input.physical_activity
+    data.general_health = init['gen_health'].index(input.general_health)
+    data.sleep_time = input.sleep_time
+    data.asthma = input.asthma
+    data.kidney_disease = input.kidney_disease
+    data.skin_cancer = input.skin_cancer
+
+    result = init['sgd'].predict_proba([data.to_list()])
+    result = result[0]
+    return ClassificationResult(no=result[0], yes=result[1])
 
 
 @app.get('/api/get/sex')

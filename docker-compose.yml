@@ -1,4 +1,4 @@
-version: '3'
+version: '3.5'
 services:
   jupyter:
     image: jupyter/base-notebook
@@ -7,6 +7,24 @@ services:
     restart: unless-stopped
     user: root
     ports:
-      - '8889:8889'
+      - '8889:8888'
     volumes:
       - ./volumes/jupyter:/home/jovyan/
+  api:
+    build: 
+      context: .
+      dockerfile: api/Dockerfile
+    ports:
+      - '1111:80'
+    restart: unless-stopped
+    container_name: groupApi
+    hostname: groupApi
+  web:
+    build:
+      context: .
+      dockerfile: web/Dockerfile
+    ports:
+      - '80:80'
+    restart: unless-stopped
+    container_name: groupWeb
+    hostname: groupWeb

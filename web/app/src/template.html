@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="x-ua-compatible" content="ie=edge" />
+  <title><%= htmlWebpackPlugin.options.title %></title>
+</head>
+
+<body>
+  <div class="container">
+
+    <header class="header">
+      <h1 class="header--title">🩺 Predict your heart disease</h1>
+      <h2 class="header--subtitle">
+        Machine learning backed algorithm to help you predict and diagnose your chances of having
+        a heart disease
+      </h2>
+    </header>
+
+    <main class="main">
+      <h3 class="main--title">
+        Question selection
+      </h3>
+      <p>Keep in mind that you should answer these questions as honestly as possible and this model does not substitute
+        a medical diagnosis!</p>
+      <form method="post" class="main--form" id="form">
+        <div class="main--input">
+          <label for="weight">Weight</label>
+          <div>
+            <input type="number" min="0" name="weight" id="data-weight" required>
+            <small>kg</small>
+          </div>
+        </div>
+        <div class="main--input">
+          <label for="height">Height</label>
+          <div>
+            <input type="number" min="0" name="height" id="data-height" required>
+            <small>cm</small>
+          </div>
+        </div>
+        <div class="main--input">
+          <label for="sex">Sex</label>
+          <div>
+            <select name="sex" id="data-sex" required>
+            </select>
+          </div>
+        </div>
+        <div class="main--input">
+          <label for="age_category">Age category</label>
+          <div>
+            <select name="age_category" id="data-age_category" required>
+            </select>
+          </div>
+        </div>
+        <div class="main--input">
+          <label for="race">Race</label>
+          <div>
+            <select name="race" id="data-race" required>
+            </select>
+          </div>
+        </div>
+        <div class="main--input">
+          <label for="smoking">Have you smoked at least 100 cigarettes in your entire life?</label>
+          <small class="main--input__comment">(5 packs = 100 cigarettes)</small>
+          <div>
+            <select name="smoking" id="data-smoking" required>
+              <option value="no">No</option>
+              <option value="yes">Yes</option>
+            </select>
+          </div>
+        </div>
+        <div class="main--input">
+          <label for="alcohol_drinking">Do you consider yourself as a heavy drinker?</label>
+          <small class="main--input__comment">(adult men having more than 14 drinks per week and adult women having more than 7 drinks per week)</small>
+          <div>
+            <select name="alcohol_drinking" id="data-drinking" required>
+              <option value="no">No</option>
+              <option value="yes">Yes</option>
+            </select>
+          </div>
+        </div>
+        <div class="main--input">
+          <label for="physical_health">How many days during the past 30 days was your physical health not good?</label>
+          <small class="main--input__comment">(which includes physical illness and injury)</small>
+          <div>
+            <input type="number" min="0" max="30" name="physical_health" id="data-physical_health" required />
+            <small>days</small>
+          </div>
+        </div>
+        <div class="main--input">
+          <label for="mental_health">How many days during the past 30 days was your mental health not good?</label>
+          <div>
+            <input type="number" min="0" max="30" name="mental_health" id="data-mental_health" required />
+            <small>days</small>
+          </div>
+        </div>
+        <div class="main--input">
+          <label for="diff_walking">Do you have serious difficulty walking or climbing stairs?</label>
+          <div>
+            <select name="diff_walking" id="data-diff_walking" required>
+              <option value="no">No</option>
+              <option value="yes">Yes</option>
+            </select>
+          </div>
+        </div>
+        <div class="main--input">
+          <label for="physical_activity">Have you played any sports (running, biking, etc.) in the past month?</label>
+          <div>
+            <select name="physical_activity" id="data-sports" required>
+              <option value="no">No</option>
+              <option value="yes">Yes</option>
+            </select>
+          </div>
+        </div>
+        <div class="main--input">
+          <label for="general_health">Would you say that in general your health is...</label>
+          <div>
+            <select name="general_health" id="data-gen_health" required>
+            </select>
+          </div>
+        </div>
+        <div class="main--input">
+          <label for="sleep_time">On average, how many hours of sleep do you get in a 24-hour period?</label>
+          <div>
+            <input type="number" min="0" name="sleep_time" id="data-sleep" required />
+            <small>hours</small>
+          </div>
+        </div>
+        <div class="main--input">
+          <label for="asthma">(Ever told) (you had) asthma?</label>
+          <div>
+            <select name="asthma" id="data-asthma" required>
+              <option value="no">No</option>
+              <option value="yes">Yes</option>
+            </select>
+          </div>
+        </div>
+        <div class="main--input">
+          <label for="diabetic">(Ever told) (you had) diabetes?</label>
+          <div>
+            <select name="diabetic" id="data-diabetes" required>
+              <option value="no">No</option>
+              <option value="yes">Yes</option>
+            </select>
+          </div>
+        </div>
+        <div class="main--input">
+          <label for="stroke">(Ever told) (you had) stroke?</label>
+          <div>
+            <select name="stroke" id="data-stroke" required>
+              <option value="no">No</option>
+              <option value="yes">Yes</option>
+            </select>
+          </div>
+        </div>
+        <div class="main--input">
+          <label for="kidney_disease">Were you ever told you had kidney disease?</label>
+          <small class="main--input__comment">(not including kidney stones, bladder infection or incontinence)</small>
+          <div>
+            <select name="kidney_disease" id="data-kidney_disease" required>
+              <option value="no">No</option>
+              <option value="yes">Yes</option>
+            </select>
+          </div>
+        </div>
+        <div class="main--input">
+          <label for="skin_cancer">(Ever told) (you had) skin cancer?</label>
+          <div>
+            <select name="skin_cancer" id="data-skin_cancer" required>
+              <option value="no">No</option>
+              <option value="yes">Yes</option>
+            </select>
+          </div>
+        </div>
+        <button type="submit" class="main--form__submit">Predict</button>
+      </form>
+      <section class="results">
+        <p class="results--msg">Your chances of having a heart disease is...</p>
+        <p class="results--percentage">🫀 <span id="results-percentage"></span></p>
+        <p class="results--additionalmsg hidden"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg> You should consult a doctor immediately.</p>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <p class="footer--authors">
+        2022 <span class="footer__emphasis">|</span> Created by
+        <a class="footer--link" href="https://www.linkedin.com/in/orsolya-dorottya-holgyes/" target="_blank">Hölgyes
+          Orsolya-Dorottya</a>,
+        <a class="footer--link" href="https://www.linkedin.com/in/jancs%C3%B3-norbert-48198b197/" target="_blank">Jancsó
+          Norbert</a>,
+        <a class="footer--link" href="https://www.linkedin.com/in/zsolt-lukacs/" target="_blank">Lukács Zsolt</a>.
+      </p>
+    </footer>
+
+  </div>
+</body>
+
+</html>

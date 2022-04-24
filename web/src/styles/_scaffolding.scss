@@ -21,6 +21,10 @@ html {
   background: $background-color;
   color: $font-color;
   line-height: 1.4;
+
+  @include respond(950px) {
+    font-size: $font-size * 0.9;
+  }
 }
 
 body {
@@ -42,6 +46,11 @@ body {
 .container {
   max-width: $page-width;
   margin: auto;
+
+  @include respond(950px) {
+    max-width: unset;
+    padding: 0rem 5rem;
+  }
 }
 
 input, select {

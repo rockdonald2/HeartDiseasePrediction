@@ -150,6 +150,7 @@ def on_startup():
     X = heart_model_data.data
     y = heart_model_data.target
 
+    # we going to ignore test datas, we are not calculating score right now
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.1, random_state=2000)
 
     init['sgd'] = make_pipeline(StandardScaler(), SGDClassifier(loss='modified_huber', penalty='elasticnet', tol=1e-8, max_iter=np.ceil(10**8 / len(heart_model_data.data)), class_weight='balanced'))

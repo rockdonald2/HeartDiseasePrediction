@@ -31,7 +31,7 @@ export function doForm() {
         const height = passedData['height'];
         delete passedData['height'];
 
-        const bmi = (weight / Math.pow(height, 2)) * 10000;
+        const bmi = weight / ((height * height) / 10000);
 
         passedData['bmi'] = bmi;
 
@@ -46,7 +46,9 @@ export function doForm() {
             .then((json) => {
                 let yes = parseFloat(json['yes']);
 
-                results.querySelector('#results-percentage').innerHTML = `${(yes * 100).toFixed(0)}%`;
+                results.querySelector('#results-percentage').innerHTML = `${(yes * 100).toFixed(
+                    0
+                )}%`;
 
                 if (yes >= 0.6) {
                     results.querySelector('.results--additionalmsg').classList.remove('hidden');

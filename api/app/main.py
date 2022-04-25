@@ -170,8 +170,7 @@ def on_startup():
     X = heart_model_data.data
     y = heart_model_data.target
 
-    init['sgd'] = make_pipeline(StandardScaler(), SGDClassifier(loss='modified_huber', penalty='elasticnet',
-                                tol=1e-8, max_iter=np.ceil(10**8 / len(heart_model_data.data)), class_weight='balanced'))
+    init['sgd'] = make_pipeline(StandardScaler(), SGDClassifier(loss='modified_huber', penalty='l2', max_iter=1000, class_weight='balanced', random_state=0))
     init['sgd'].fit(X, y)
 
 

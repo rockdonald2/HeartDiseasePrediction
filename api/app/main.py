@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel, Field, validator
 from sklearn.linear_model import SGDClassifier
 from sklearn.preprocessing import StandardScaler
@@ -102,9 +102,9 @@ class ClassificationParameters(BaseModel):
         return v
 
 
-class ClassificationBarebone(BaseModel):
+class ClassificationPragmaticalBarebone(BaseModel):
     '''
-        Used internally only.
+        Used internally only for prediction model.
     '''
 
     bmi: Optional[float]
@@ -134,10 +134,9 @@ class ClassificationResult(BaseModel):
     yes: float = Field(description="Probability that heart disease will occur")
 
 
-@app.on_event('startup')
-def on_startup():
+def prepare_prediction_model1_with_pragmatical_conversion():
     '''
-        Create classification model.
+        Populates init dictionary with sex, age_category, race, gen_health and model keys.
     '''
 
     heart = pd.read_csv('data/heart_cleaned.csv')
@@ -170,17 +169,11 @@ def on_startup():
     X = heart_model_data.data
     y = heart_model_data.target
 
-    init['sgd'] = make_pipeline(StandardScaler(), SGDClassifier(loss='modified_huber', penalty='l2', max_iter=1000, class_weight='balanced', random_state=0))
-    init['sgd'].fit(X, y)
+    init['model'] = make_pipeline(StandardScaler(), SGDClassifier(loss='modified_huber', penalty='l2', max_iter=1000, class_weight='balanced', random_state=0))
+    init['model'].fit(X, y)
 
-
-@app.post('/api/classify', response_model=ClassificationResult, tags=['API'])
-def do_classify(input: ClassificationParameters):
-    '''
-        We will need to convert the input parameters to be fitting to our model.
-    '''
-
-    data = ClassificationBarebone()
+def do_pragmatical_prediction(input: ClassificationParameters):
+    data = ClassificationPragmaticalBarebone()
 
     data.bmi = input.bmi
     data.smoking = input.smoking
@@ -200,34 +193,64 @@ def do_classify(input: ClassificationParameters):
     data.kidney_disease = input.kidney_disease
     data.skin_cancer = input.skin_cancer
 
-    result = init['sgd'].predict_proba([data.to_list()])
+    result = init['model'].predict_proba([data.to_list()])
     result = result[0]
     return ClassificationResult(no=result[0], yes=result[1])
 
 
+@app.on_event('startup')
+def on_startup():
+    '''
+        Create classification model.
+    '''
+
+    prepare_prediction_model1_with_pragmatical_conversion()
+
+
+@app.post('/api/classify', response_model=ClassificationResult, tags=['API'])
+def do_classify(input: ClassificationParameters):
+    '''
+        We will need to convert the input parameters to be fitting to our model.
+    '''
+
+    return do_pragmatical_prediction(input)
+
+
 @app.get('/api/get/sex', tags=['API'])
 def get_sex():
-    return {
-        'sex': init['sex']
-    }
+    if 'sex' in init:
+        return {
+            'sex': init['sex']
+        }
+    else:
+        raise HTTPException(status_code=404, detail='Not found')
 
 
 @app.get('/api/get/age', tags=['API'])
 def get_age():
-    return {
-        'age_category': init['age_category']
-    }
+    if 'age_category' in init:
+        return {
+            'age_category': init['age_category']
+        }
+    else:
+        raise HTTPException(status_code=404, detail='Not found')
 
 
 @app.get('/api/get/race', tags=['API'])
 def get_race():
-    return {
-        'race': init['race']
-    }
+    if 'race' in init:
+        return {
+            'race': init['race']
+        }
+    else:
+        raise HTTPException(status_code=404, detail='Not found')
 
 
 @app.get('/api/get/gen_health', tags=['API'])
 def get_gen_health():
-    return {
-        'gen_health': init['gen_health']
-    }
+    if 'gen_health' in init:
+        return {
+            'gen_health': init['gen_health']
+        }   
+    else:
+        raise HTTPException(status_code=404, detail='Not found')

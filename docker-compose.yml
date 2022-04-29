@@ -8,8 +8,6 @@ services:
     user: root
     ports:
       - '8889:8888'
-    volumes:
-      - ./volumes/jupyter:/home/jovyan/
   api:
     build: 
       context: .

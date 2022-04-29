@@ -64,6 +64,7 @@ _All the results can be inspected in the `explore_dummies.ipynb` notebook._
 | `SGDClassifier` with `log` and `class_weight='balanced'` | 0.724015009380863 |
 | `LogisticRegression` with `class_weight='balanced'` | 0.7537836147592245 |
 
+_All the results can be inspected in the `explore_hotencoder.ipynb` notebook._
 _Could not test it, took too long to predict, but with seemingly good precision._
 
 ### Fourth try
@@ -73,6 +74,8 @@ _Could not test it, took too long to predict, but with seemingly good precision.
 | `SGDClassifier` with `modified_huber` and `class_weight='balanced'` | 0.7581613508442777 |
 | `SGDClassifier` with `log` and `class_weight='balanced'` | 0.7429018136335209 |
 | `LogisticRegression` with `class_weight='balanced'` | 0.742714196372733 |
+
+_All the results can be inspected in the `explore_label_ordinal_encoders.ipynb` notebook._
 
 ---
 

@@ -71,11 +71,26 @@ _Could not test it, took too long to predict, but with seemingly good precision.
 
 | Classifier | random `.score()` value when using `LabelEncoder` and `OrdinalEncoder` |
 | --- | --- |
-| `SGDClassifier` with `modified_huber` and `class_weight='balanced'` | 0.7581613508442777 |
-| `SGDClassifier` with `log` and `class_weight='balanced'` | 0.7429018136335209 |
-| `LogisticRegression` with `class_weight='balanced'` | 0.742714196372733 |
+| `SGDClassifier` with `modified_huber` and `class_weight='balanced'` | 0.7583489681050657. |
+| `SGDClassifier` with `log` and `class_weight='balanced'` | 0.743370856785491 |
+| `LogisticRegression` with `class_weight='balanced'` | 0.7429643527204502 |
 
 _All the results can be inspected in the `explore_label_ordinal_encoders.ipynb` notebook._
+Bit of hack made here, we separated numerical and categorical columns, then applied OrdinalEncoder on categorical values.
+
+## Implementation
+
+`web` project contains the front-end, written in HTML + SCSS + JS (webpack).
+`api` project contains the back-end, written in Python.
+
+Every Docker deployment will deploy the `web` and `api` projects in separate containers.
+
+In the `api` project we have implemented two ways of predicting results:
+
+- one is the manual, pragmatical method, where we manually assign integer values to categories, with: `prepare_prediction_model1_with_pragmatical_conversion()` and `return do_pragmatical_prediction(input)` calls;
+- second uses the method with `OrdinalEncoder` and `LabelEncoder`, with `prepare_prediction_model2_with_encoders()` and `return do_encoded_prediction(input)` calls.
+
+Current deployment contains the second approach.
 
 ---
 

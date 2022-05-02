@@ -59,7 +59,7 @@ _All the results can be inspected in the `explore_dummies.ipynb` notebook._
 
 ### Third try
 
-| Classifier | random `.score()` value when using `get_dummies()` preparation method |
+| Classifier | random `.score()` value when using `OneHotEncoder` preparation method |
 | --- | --- |
 | `SGDClassifier` with `modified_huber` and `class_weight='balanced'` | 0.7271106941838649 |
 | `SGDClassifier` with `log` and `class_weight='balanced'` | 0.724015009380863 |

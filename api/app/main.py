@@ -234,15 +234,17 @@ def prepare_prediction_model2_with_encoders():
     oe.fit(X_categorical)
     fitted_X_categorical = oe.transform(X_categorical)
 
-    del X_categorical
-
     X_numerical.reset_index(inplace=True)
 
     fitted_X_categorical = pd.DataFrame(fitted_X_categorical, columns=X_categorical.columns)
     fitted_X_categorical.reset_index(inplace=True)
 
+    del X_categorical
+
     X = X_numerical.merge(fitted_X_categorical, left_on='index', right_on='index', how='inner')
     X.drop(columns='index', inplace=True)
+
+    del X_numerical
 
     heart_model_data['data'] = X.values
     heart_model_data['feature_names'] = X.columns

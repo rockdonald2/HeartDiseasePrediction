@@ -5,11 +5,13 @@ Machine learning based algorithm to diagnose heart disease.
 ## How to get it to work
 
 1. `git clone` this repo,
-2. build `web` project with `cd web/app && npm run build && cd ../..`
+2. build `web` project with `cd web/app && npm install && npm run build && cd ../..`
 3. `docker compose up -d` to install services,
 4. wait a minute, then ready to go.
 
 You have a container deployed Jupyter Lab (port `8889`), FastAPI with uvicorn (port `1111`) and NGINX (port `80`).
+
+_npm (`sudo apt install npm -y`) has to be installed on the machine._
 
 ## Tests
 

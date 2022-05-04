@@ -99,7 +99,7 @@ Current deployment contains the second approach.
 
 ### Other remarks
 
-- Before trying to use the api in the website, update the API address in the `consts.js` file;
+- ~~Before trying to use the api in the website, update the API address in the `consts.js` file~~;
 - The API currently uses the first discussed method for categorical-numerical conversion and SGDClassifier to predict with good precision.
 - We've also used classification_reports to measure the accurracy of our models.
 - For our model to be deployed on a `t2.micro` AWS EC2 machine, the `jupyter` service has to be removed from compose descriptor.

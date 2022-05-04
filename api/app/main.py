@@ -1,6 +1,7 @@
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel, Field, validator
 from sklearn.linear_model import SGDClassifier
+from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler, LabelEncoder, OrdinalEncoder
 from sklearn.pipeline import make_pipeline
 from sklearn.utils import Bunch
@@ -196,7 +197,10 @@ def prepare_prediction_model1_with_pragmatical_conversion():
 
     init['model'] = make_pipeline(StandardScaler(), SGDClassifier(
         loss='modified_huber', penalty='l2', max_iter=1000, class_weight='balanced', random_state=0))
-    init['model'].fit(X, y)
+
+    X_train, _, y_train, _ = train_test_split(X, y, test_size=0.1, random_state=2000)
+
+    init['model'].fit(X_train, y_train)
 
 
 def prepare_prediction_model2_with_encoders():
@@ -246,7 +250,13 @@ def prepare_prediction_model2_with_encoders():
 
     init['model'] = make_pipeline(StandardScaler(), SGDClassifier(
         loss='log', penalty='l2', max_iter=1000, class_weight='balanced', random_state=0))
-    init['model'].fit(heart_model_data.data, heart_model_data.target)
+
+    X = heart_model_data.data
+    y = heart_model_data.target
+
+    X_train, _, y_train, _ = train_test_split(X, y, test_size=0.1, random_state=2000)
+
+    init['model'].fit(X_train, y_train)
 
 
 def do_pragmatical_prediction(input: ClassificationParameters):

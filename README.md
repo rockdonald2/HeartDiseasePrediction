@@ -6,8 +6,8 @@ Machine learning based algorithm to diagnose heart disease.
 
 1. `git clone` this repo,
 2. build `web` project with `cd web/app && npm run build && cd ../..`
-3. `docker compose up` to install services,
-4. ready to go.
+3. `docker compose up -d` to install services,
+4. wait a minute, then ready to go.
 
 You have a container deployed Jupyter Lab (port `8889`), FastAPI with uvicorn (port `1111`) and NGINX (port `80`).
 
@@ -98,4 +98,5 @@ Current deployment contains the second approach.
 ### Other remarks
 
 - Before trying to use the api in the website, update the API address in the `consts.js` file;
-- the API currently uses the first discussed method for categorical-numerical conversion and SGDClassifier to predict with good precision.
+- The API currently uses the first discussed method for categorical-numerical conversion and SGDClassifier to predict with good precision.
+- We've also used classification_reports to measure the accurracy of our models.

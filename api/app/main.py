@@ -228,9 +228,13 @@ def prepare_prediction_model2_with_encoders():
     X_numerical = heart[['BMI', 'PhysicalHealth', 'MentalHealth', 'SleepTime']]
     X_categorical = heart.drop(columns=['BMI', 'PhysicalHealth', 'MentalHealth', 'SleepTime'])
 
+    del heart
+
     oe = OrdinalEncoder()
     oe.fit(X_categorical)
     fitted_X_categorical = oe.transform(X_categorical)
+
+    del X_categorical
 
     X_numerical.reset_index(inplace=True)
 
@@ -256,7 +260,13 @@ def prepare_prediction_model2_with_encoders():
 
     X_train, _, y_train, _ = train_test_split(X, y, test_size=0.1, random_state=2000)
 
+    del X
+    del y
+
     init['model'].fit(X_train, y_train)
+
+    del X_train
+    del y_train
 
 
 def do_pragmatical_prediction(input: ClassificationParameters):

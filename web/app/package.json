@@ -50,6 +50,6 @@
     "url": "git@github.com:taniarascia/webpack-boilerplate"
   },
   "dependencies": {
-    "@babel/runtime": "^7.17.9",
+    "@babel/runtime": "^7.17.9"
   }
 }

@@ -51,6 +51,5 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.17.9",
-    "npm": "^8.10.0"
   }
 }

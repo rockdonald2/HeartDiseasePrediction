@@ -19,7 +19,7 @@ We tried these supervised-classification learning methods:
 
 - `KNeighbors` with multiple n-neighbors values: was totally useless, with results that: n-neighbors value of 1 or 2 was the most precise, which is unreal;
 - `SVC` good score, really bad predicted probabilities;
-- `SGD` had good results, with averages scores around 70-75%, but this depends on a lot factors discussed in the section [Data processing](#data-processing);
+- `SGD` had good results, with average scores around 70-75%, but this depends on a lot factors discussed in the section [Data processing](#data-processing);
 - `LogisticRegression` same as SGD, really hard to tell which is better, depends on how the data is formulated for processing.
 
 ## Data processing
@@ -28,12 +28,12 @@ The real challenge is that somehow we need to use the aforementioned algorithms 
 
 There are multiple ways by which we can convert categorical columns into numerical columns:  
 
-- we can assign programatically numbers to categorical values, i.e. sort the unique values of a category, then take this list's indices and assign the its index to a value.
-  - as it turns out this is also a supported encoding method in sci-kit named `LabelEncoder` or `OrdinalEncoder` (see here: [source](https://www.ritchieng.com/machinelearning-one-hot-encoding/)).
+- we can assign programmatically numbers to categorical values, i.e. sort the unique values of a category, then take this list's indices and assign the its index to a value.
+  - as it turns out this is also a supported encoding method in sci-kit named `LabelEncoder` or `OrdinalEncoder` (see here: [source](https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.LabelEncoder.html)).
 - we can use `pd.get_dummies()` that does this in a different manner;
 - we can use `OneHotEncoder` from sci-kit.
 
-We different data forms we had different scores, but the average score was somewhere between 70-75%.
+With different data forms we had different scores, but the average score was somewhere between 70-75%.
 
 With the first data preparation method the `SGDClassifier` was the obvious winner, but if we used the `pd.get_dummies()` method `LogisticRegression` came up first.
 
